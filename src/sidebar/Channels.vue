@@ -3,6 +3,19 @@
 
       <button @click="openModal" class="btn btn-outline-primary mt-3">Add Channel</button>
 
+      <div class="mt-4">
+        <button
+          v-for="channel in channels"
+          class="list-group-item list-group-item-action"
+          type="button"
+          :class="{'active': setActiveChannel(channel)}"
+          @click="changeChannel(channel)">
+
+          {{ channel.name }}
+
+        </button>
+      </div>
+
     <!-- Modal -->
     <div class="modal fade" id="channelModal">
       <div class="modal-dialog modal-dialog-centered" role="document">
@@ -41,6 +54,7 @@
 
 <script>
 import database from 'firebase/database'
+import {mapGetters} from 'vuex'
 
     export default {
       name: 'channels',
@@ -49,11 +63,15 @@ import database from 'firebase/database'
         return {
           new_channel: '',
           errors: [],
-          channelsRef: firebase.database().ref('channels')
+          channelsRef: firebase.database().ref('channels'),
+          channels: [],
+          channel: null
         }
       },
 
       computed: {
+        ...mapGetters(['currentChannel']),
+
         hasErrors() {
           return this.errors.length > 0
         }
@@ -86,11 +104,34 @@ import database from 'firebase/database'
         },
 
         addListeners() {
+          this.channelsRef.on('child_added', snapshot => {
+            //console.log('listening channelsRef on child_added: ', snapshot.val());
+            this.channels.push(snapshot.val());
 
+            //set current channel
+            if (this.channels.length > 0) {
+
+              // set the first one as the current channel
+              this.channel = this.channels[0];
+
+              // dispatch current channel to store
+              this.$store.dispatch("setCurrentChannel", this.channel) // pick up the first one.
+            }
+          });
+        },
+
+        //set active channel
+        setActiveChannel(channel) {
+          return channel.id === this.currentChannel.id;
+        },
+
+        // change the current active channel
+        changeChannel(channel) {
+          this.$store.dispatch("setCurrentChannel", channel);
         },
 
         detachListeners() {
-
+          this.channelsRef.off();
         }
       },
 
