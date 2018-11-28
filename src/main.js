@@ -15,12 +15,12 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 // Initialize Firebase
 var config = {
-  apiKey: "AIzaSyAkVhF2MlU3LspQep2P6B7NPUhZRU-CmcQ",
-  authDomain: "vuex-slack-emulator.firebaseapp.com",
-  databaseURL: "https://vuex-slack-emulator.firebaseio.com",
-  projectId: "vuex-slack-emulator",
-  storageBucket: "vuex-slack-emulator.appspot.com",
-  messagingSenderId: "523626561682"
+    apiKey: "AIzaSyAkVhF2MlU3LspQep2P6B7NPUhZRU-CmcQ",
+    authDomain: "vuex-slack-emulator.firebaseapp.com",
+    databaseURL: "https://vuex-slack-emulator.firebaseio.com",
+    projectId: "vuex-slack-emulator",
+    storageBucket: "vuex-slack-emulator.appspot.com",
+    messagingSenderId: "523626561682"
 };
 
 firebase.initializeApp(config);
@@ -29,19 +29,19 @@ firebase.initializeApp(config);
 window.firebase = firebase;
 
 const unsubscribe = firebase.auth().onAuthStateChanged( user => {
-  store.dispatch('setUser', user);
+    store.dispatch('setUser', user);
 
-  /* eslint-disable no-new */
-  new Vue({
-    el: '#app',
-    router,
-    store,
-    components: { App },
-    template: '<App/>'
-  });
+    /* eslint-disable no-new */
+    new Vue({
+        el: '#app',
+        router,
+        store,
+        components: { App },
+        template: '<App/>'
+    });
 
-  // recursion - this function calls itself on auth state change
-  unsubscribe()
+    // recursion - this function calls itself on auth state change
+    unsubscribe()
 
 });
 
