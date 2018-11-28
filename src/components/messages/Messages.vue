@@ -1,20 +1,29 @@
 <template>
-  <div>
-      <!-- show single message -->
-      <single-message></single-message>
+    <div>
+        <!-- show single message -->
+        <single-message></single-message>
 
-      <!-- message form -->
-      <message-form></message-form>
-  </div>
+        <!-- message form -->
+        <message-form></message-form>
+    </div>
 </template>
 
 <script>
-  import SingleMessage from './SingleMessage'
-  import MessageForm from './MessageForm'
+    import SingleMessage from './SingleMessage'
+    import MessageForm from './MessageForm'
+    import database from 'firebase/database'
 
-  export default {
-    name: 'messages',
+    export default {
+        name: 'messages',
 
-    components: {SingleMessage, MessageForm}
-  }
+        components: {SingleMessage, MessageForm},
+
+        data() {
+            return {
+                messagesRef: firebase.database().ref('messages')
+            }
+        }
+
+
+    }
 </script>
